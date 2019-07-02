@@ -1,0 +1,12 @@
+version: '3.7'
+services:
+  hadoop:
+      build: .
+      volumes:
+          - ./data:/data
+      ports:
+          - "127.0.0.1:9000:9000"
+          - "127.0.0.1:50070:50070"
+          - "127.0.0.1:8088:8088"
+      stdin_open: true
+      tty: true
