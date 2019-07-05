@@ -27,6 +27,8 @@ RUN sed -i 's/^#PermitRootLogin/PermitRootLogin/' /etc/ssh/sshd_config
 RUN /usr/sbin/sshd
 # root user needs passwd in order to prevent 'User root not allowed because account is locked'
 RUN passwd -d root
+# Alpine uses ash but we need bash for hadoop
+RUN sed -i 's@root:x:0:0:root:/root:/bin/ash@root:x:0:0:root:/root:/bin/bash@' /etc/passwd
 
 
 # Hadoop Config
@@ -35,8 +37,6 @@ ADD conf/core-site.xml /etc/hadoop/core-site.xmlp
 ADD conf/hdfs-site.xml /etc/hadoop/hdfs-site.xml
 # In the distribution, edit the file etc/hadoop/hadoop-env.sh to define some parameters as follows:
 RUN echo 'export JAVA_HOME=$(readlink -f /usr/bin/java | sed "s:bin/java::")' >> /usr/local/hadoop/etc/hadoop/hadoop-env.sh
-# Alpine uses ash but we need bash for hadoop
-RUN sed -i 's@root:x:0:0:root:/root:/bin/ash@root:x:0:0:root:/root:/bin/bash@' /etc/passwd
 
 # start hadoop script
 RUN mkdir /root/bin/
